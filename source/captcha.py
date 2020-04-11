@@ -9,7 +9,7 @@ import os
 
 
 class Captcha(QtWidgets.QDialog, Ui_Captcha):
-    def __init__(self, captcha):
+    def __init__(self):
         super(Captcha, self).__init__()
         self.setupUi(self)
         log_dir = os.path.join(

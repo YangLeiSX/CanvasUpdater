@@ -10,7 +10,6 @@ from requests.adapters import HTTPAdapter
 from requests.exceptions import RequestException
 from tenacity import retry, retry_if_exception_type, wait_fixed
 
-# from autocaptcha import autocaptcha
 from utils import (re_search, get_timestamp)
 from utils import (RetryRequest, AutomataError)
 
@@ -47,7 +46,7 @@ def _bypass_captcha(session, url):
     with open(os.path.join(log_dir, 'captcha.jpeg'), 'wb') as f:
         f.write(captcha.content)
     qDebug("out captcha")
-    return captcha
+    return None
 
 
 @retry(retry=retry_if_exception_type(RequestException), wait=wait_fixed(3))
@@ -95,9 +94,8 @@ def login(url, parent=None, username=None, password=None):
         captcha_id += get_timestamp()
         captcha_url = 'https://jaccount.sjtu.edu.cn/jaccount/captcha?' +\
                       captcha_id
-        # code = _bypass_captcha(session, captcha_url, useocr)
-        captcha = _bypass_captcha(session, captcha_url)
-        check = Captcha(captcha)
+        _bypass_captcha(session, captcha_url)
+        check = Captcha()
         if not check.exec_():
             session.close()
             return None

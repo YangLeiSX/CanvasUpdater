@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-# @author: YangLeiSX
-# @data: 2020-04-06
 
 # Form implementation generated from reading ui file 'captcha.ui'
 #
