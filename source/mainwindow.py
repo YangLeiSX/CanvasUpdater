@@ -5,7 +5,6 @@
 import sys
 import os
 import json
-import time
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import qDebug, QFileInfo
 from PyQt5.QtCore import pyqtSignal as Signal
@@ -59,6 +58,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.progress.setValue(0)
         self.isSave.setChecked(False)
         self.Speed.setText("500")
+        if not os.path.exists(self.log_dir):
+            os.mkdir(self.log_dir)
         if os.path.exists(os.path.join(self.log_dir, 'loginInfo.json')):
             with open(os.path.join(self.log_dir, 'loginInfo.json'), 'r') as f:
                 loginInfo = json.loads(f.read())
@@ -83,7 +84,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         qDebug(jaccount)
         qDebug(password)
         self.session = login(url="https://oc.sjtu.edu.cn/login/openid_connect",
-                             parent=self, username=jaccount, password=password,)
+                             parent=self, username=jaccount, password=password)
         if self.session:
             self.LogInfo.emit("[MSG]Log in Successfully!\n")
             loginInfo = {}
@@ -102,7 +103,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             return
         self.cu = CanvasUpdate(self, self.session)
         self.cu.start()
-        self.parseRemote()
+        # self.parseRemote()
 
     @Slot()
     def on_GetPathBtn_clicked(self):

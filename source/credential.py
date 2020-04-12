@@ -35,14 +35,10 @@ def _get_login_page(session, url):
 
 
 @retry(retry=retry_if_exception_type(RequestException), wait=wait_fixed(3))
-def _bypass_captcha(session, url):
+def _bypass_captcha(parent, session, url):
     # return captcha code
     captcha = session.get(url)
-    log_dir = os.path.join(
-                   os.path.split(os.path.abspath(__file__))[0],
-                   "log")
-    if not os.path.exists(log_dir):
-        os.mkdir(log_dir)
+    log_dir = parent.log_dir
     with open(os.path.join(log_dir, 'captcha.jpeg'), 'wb') as f:
         f.write(captcha.content)
     qDebug("out captcha")
@@ -77,8 +73,6 @@ def _login(session, sid, returl, se, client, username, password, code, uuid):
 def login(url, parent=None, username=None, password=None):
     if (not password) or (not username):
         return None
-#       username = input('Username: ')
-#       password = getpass('Password(no echo): ')
     qDebug("in login")
     while True:
         session = _create_session()
@@ -94,8 +88,8 @@ def login(url, parent=None, username=None, password=None):
         captcha_id += get_timestamp()
         captcha_url = 'https://jaccount.sjtu.edu.cn/jaccount/captcha?' +\
                       captcha_id
-        _bypass_captcha(session, captcha_url)
-        check = Captcha()
+        code = _bypass_captcha(parent, session, captcha_url)
+        check = Captcha(parent)
         if not check.exec_():
             session.close()
             return None

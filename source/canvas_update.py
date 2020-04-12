@@ -5,7 +5,6 @@
 from bs4 import BeautifulSoup
 import json
 import os
-import sys
 from time import sleep
 from PyQt5.QtCore import qDebug
 from PyQt5.QtCore import QThread
@@ -22,9 +21,7 @@ class CanvasUpdate(QThread):
         self.parent = parent
         self.status = False
 
-        self.log_dir = os.path.join(
-                       os.path.split(os.path.abspath(__file__))[0],
-                       "log")
+        self.log_dir = self.parent.log_dir
         if not os.path.exists(self.log_dir):
             os.mkdir(self.log_dir)
 

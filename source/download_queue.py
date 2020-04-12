@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+# @author: YangLeiSX
+# @data: 2020-04-06
+
 from PyQt5 import QtCore
 import os
 from time import sleep
